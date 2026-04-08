@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acesso restrito</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: #fff;
+      background: linear-gradient(180deg, #16000b 0%, #0a0006 100%);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      filter: blur(14px) brightness(0.28) saturate(1.05);
+      transform: scale(1.08);
+      pointer-events: none;
+    }
+
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at top, rgba(255, 70, 120, 0.18), transparent 30%),
+        radial-gradient(circle at bottom, rgba(255, 120, 0, 0.10), transparent 25%),
+        linear-gradient(180deg, rgba(10, 0, 6, 0.35) 0%, rgba(8, 0, 5, 0.62) 100%);
+    }
+
+    .glow {
+      position: fixed;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 70, 120, 0.18), transparent 65%);
+      filter: blur(45px);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .glow.one {
+      top: -140px;
+      left: -100px;
+    }
+
+    .glow.two {
+      bottom: -160px;
+      right: -120px;
+      background: radial-gradient(circle, rgba(255, 120, 0, 0.14), transparent 65%);
+    }
+
+    .card {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      max-width: 470px;
+      padding: 34px 28px 24px;
+      border-radius: 30px;
+      background: rgba(18, 3, 10, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.46),
+        0 0 90px rgba(255, 60, 120, 0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ff9dbf;
+      padding: 10px 15px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: 34px;
+      line-height: 1.04;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+    }
+
+    .accent {
+      background: linear-gradient(90deg, #ff4d6d 0%, #ff8a00 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sub {
+      font-size: 17px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 24px;
+    }
+
+    .box {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 24px;
+      padding: 20px 18px;
+      margin-bottom: 18px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+
+    .line {
+      font-size: 18px;
+      line-height: 1.38;
+      margin-bottom: 14px;
+      color: #f3f3f3;
+    }
+
+    .line:last-child {
+      margin-bottom: 0;
+    }
+
+    .highlight {
+      color: #ff915e;
+      font-weight: 800;
+    }
+
+    .warn {
+      color: #ffd166;
+      font-weight: 800;
+    }
+
+    .danger {
+      color: #ff6d8b;
+      font-weight: 800;
+    }
+
+    .micro-cta {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffb3c7;
+      margin-bottom: 12px;
+      letter-spacing: 0.01em;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      text-decoration: none;
+      text-align: center;
+      border-radius: 18px;
+      padding: 18px 20px;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #fff;
+      background: linear-gradient(90deg, #ff2f63 0%, #ff6b00 100%);
+      box-shadow:
+        0 12px 34px rgba(255, 76, 76, 0.30),
+        inset 0 1px 0 rgba(255,255,255,0.18);
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      margin-bottom: 14px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
+      box-shadow:
+        0 14px 38px rgba(255, 76, 76, 0.38),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .proof {
+      font-size: 13px;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.5;
+    }
+
+    .proof strong {
+      color: #fff;
+      font-weight: 800;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 28px 20px 22px;
+        border-radius: 24px;
+      }
+
+      h1 {
+        font-size: 29px;
+      }
+
+      .sub {
+        font-size: 16px;
+      }
+
+      .line {
+        font-size: 17px;
+      }
+
+      .btn {
+        font-size: 17px;
+        padding: 17px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <video autoplay muted loop playsinline preload="metadata" class="bg-video">
+    <source src="https://files.catbox.moe/9gdgt3.mp4" type="video/mp4">
+  </video>
+
+  <div class="bg-overlay"></div>
+  <div class="glow one"></div>
+  <div class="glow two"></div>
+
+  <div class="card">
+    <div class="badge">Acesso restrito</div>
+
+    <h1>Isso <span class="accent">não era pra ter vazado</span>… e voltou</h1>
+
+    <p class="sub">
+      O acesso está aberto agora, mas esse tipo de conteúdo costuma sair do ar rápido.
+    </p>
+
+    <div class="box">
+      <p class="line">
+        O grupo que já caiu várias vezes <span class="highlight">está aberto de novo</span>.
+      </p>
+
+      <p class="line">
+        Estão liberando conteúdo <span class="highlight">sem censura</span> direto no Telegram.
+      </p>
+
+      <p class="line">
+        <span class="warn">⚠️</span> Tem coisa aqui que <span class="danger">não era pra estar circulando</span>.
+      </p>
+
+      <p class="line">
+        Se entrou por curiosidade, melhor sair antes de abrir.
+      </p>
+
+      <p class="line">
+        Quem entra agora vê tudo primeiro.
+      </p>
+    </div>
+
+    <p class="micro-cta">⚠️ Pode sair do ar a qualquer momento</p>
+
+    <a class="btn" href="https://t.me/projetovenusvip_bot?start=bruxo">
+      🔥 ENTRAR AGORA
+    </a>
+
+    <p class="proof">
+      <strong>+4.281 pessoas entraram hoje</strong> • acesso sendo fechado aos poucos
+    </p>
+  </div>
+</body>
+</html>
